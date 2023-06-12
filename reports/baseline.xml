@@ -1,0 +1,12 @@
+<SmellBaseline>
+  <!-- https://detekt.dev/docs/introduction/baseline -->
+  <ManuallySuppressedIssues>
+    <ID>TooGenericExceptionCaught:QuerydslGenerator.kt$QuerydslGenerator$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:WebApplication.kt$WebApplication$e: Exception</ID>
+    <ID>TooGenericExceptionThrown:QuerydslGenerator.kt$QuerydslGenerator$throw RuntimeException(e)</ID>
+    <ID>TooGenericExceptionCaught:WebApplication.kt$WebApplication$e: Throwable</ID>
+    <ID>MagicNumber:WebApplication.kt$WebApplication$60</ID>
+  </ManuallySuppressedIssues>
+  <CurrentIssues>
+  </CurrentIssues>
+</SmellBaseline>
