@@ -6,18 +6,18 @@ bin/
 .factorypath
 .README.md.html
 .dccache
- 
+
 # Intellij
-.idea/
+/.idea/
 *.iml
 *.iws
 
 # VSCode
 .vscode/
- 
+
 # Mac
 .DS_Store
- 
+
 # Maven
 log/
 target/
