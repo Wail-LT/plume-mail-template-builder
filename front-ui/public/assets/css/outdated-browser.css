@@ -56,7 +56,9 @@
   display: inline-table; }
 
 #outdated .last[dir=rtl] {
+  /* stylelint-disable-next-line declaration-no-important */
   left: 25px !important;
+  /* stylelint-disable-next-line declaration-no-important */
   right: auto !important;
 }
 
