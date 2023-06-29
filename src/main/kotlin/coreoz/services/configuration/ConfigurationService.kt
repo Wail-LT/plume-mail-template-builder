@@ -8,11 +8,6 @@ import javax.inject.Singleton
 class ConfigurationService
 @Inject
 private constructor(private val config: Config) {
-
-    fun hello(): String {
-        return config.getString("hello")
-    }
-
     fun swaggerAccessUsername(): String {
         return config.getString("swagger.access.username")
     }

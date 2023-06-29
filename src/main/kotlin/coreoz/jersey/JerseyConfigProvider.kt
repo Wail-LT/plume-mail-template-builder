@@ -1,10 +1,12 @@
 package coreoz.jersey
 
+import com.coreoz.plume.admin.jersey.feature.RestrictToAdmin
 import com.coreoz.plume.jersey.errors.WsJacksonJsonProvider
 import com.coreoz.plume.jersey.errors.WsResultExceptionMapper
 import com.coreoz.plume.jersey.java8.TimeParamProvider
 import com.coreoz.plume.jersey.security.permission.PublicApi
 import com.coreoz.plume.jersey.security.permission.RequireExplicitAccessControlFeature
+import com.coreoz.plume.jersey.security.permission.RestrictTo
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.glassfish.jersey.server.ResourceConfig
 import javax.inject.Inject
@@ -26,14 +28,20 @@ private constructor(private val objectMapper: ObjectMapper?) : Provider<Resource
     init {
         config = ResourceConfig()
 
-        // this package will be scanned by Jersey to discover web-service classes
+        // these packages will be scanned by Jersey to discover web-service classes
         config.packages("coreoz.webservices")
+        config.packages("com.coreoz.plume.admin.webservices")
 
         // filters configuration
         // handle errors and exceptions
         config.register(WsResultExceptionMapper::class.java)
         // require explicit access control on API
-        config.register(RequireExplicitAccessControlFeature.accessControlAnnotations(PublicApi::class.java))
+        config.register(RequireExplicitAccessControlFeature.accessControlAnnotations(
+            PublicApi::class.java,
+            RestrictToAdmin::class.java,
+            RestrictTo::class.java
+        ))
+
         // to debug web-service requests
         // register(LoggingFeature.class);
 

@@ -29,6 +29,6 @@ private constructor(private val configurationService: ConfigurationService) {
     @Path("/test/{name}")
     @Operation(description = "Example web-service")
     fun test(@Parameter(required = true) @PathParam("name") name: String): Test {
-        return Test("hello $name ${configurationService.hello()}")
+        return Test("hello $name")
     }
 }
