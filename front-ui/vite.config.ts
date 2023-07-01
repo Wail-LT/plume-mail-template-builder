@@ -38,7 +38,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@scssVariables': path.resolve(__dirname, 'assets/scss/variables.scss'),
+      '@scssVariables': path.resolve(__dirname, 'assets/scss/variables'),
       '@api': path.resolve(__dirname, 'ts-built/api'),
       '@components': path.resolve(__dirname, 'ts-built/components'),
       '@i18n': path.resolve(__dirname, 'ts-built/i18n'),
