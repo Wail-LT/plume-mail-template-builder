@@ -1,5 +1,5 @@
-import Editor from '@components/pages/editor/Editor';
-import React, { useMemo } from 'react';
+import Editor from '@lib/plume-mail-builder/components/editor/Editor';
+import React from 'react';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 import { Logger } from 'simple-logging-system';
 import Layout from '@components/layout/preview-layout/Layout';

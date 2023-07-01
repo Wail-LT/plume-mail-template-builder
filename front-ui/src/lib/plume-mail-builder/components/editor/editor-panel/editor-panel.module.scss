@@ -1,0 +1,15 @@
+$editorPanelWidth: clamp(200px, 20%, 300px);
+
+.editor-panel {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  padding: $spacing-4;
+  width: $editorPanelWidth;
+  background-color: $grey-light;
+  transition: width $transition-duration ease-in-out;
+
+  > .widget {
+    width: 50%;
+  }
+}

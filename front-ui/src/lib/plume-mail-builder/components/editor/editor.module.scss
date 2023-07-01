@@ -1,8 +1,9 @@
 .mail-editor {
+  height: 100%;
   display: flex;
 
   .editor__preview {
     flex: 1;
-    background-color: #f5f5f5;
+    background-color: white;
   }
 }

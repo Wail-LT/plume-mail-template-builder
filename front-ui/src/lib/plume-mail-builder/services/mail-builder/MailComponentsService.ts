@@ -6,13 +6,9 @@ import { componentManifests } from '@lib/plume-mail-builder/components/mail-comp
  * Service storing the state of the current mail template.
  */
 export default class MailComponentsService {
-  private componentWidgets: ComponentWidget[] = [];
-
-  private componentsById: Map<string, () => JSX.Element> = new Map();
-
-  private componentFormsById: Map<string, () => JSX.Element> = new Map();
-
   private readonly customComponents: ComponentManifest[] = [];
+
+  private componentsById: Map<string, ComponentManifest> = new Map();
 
   public registerCustomComponents(componentsManifests: ComponentManifest[]) {
     this.customComponents.push(...componentsManifests);
@@ -25,24 +21,22 @@ export default class MailComponentsService {
   }
 
   public getWidgets(): ComponentWidget[] {
-    return this.componentWidgets;
+    return [...this.componentsById.values()].map((componentManifest) => ({
+      id: componentManifest.id,
+      widgetTitle: componentManifest.widgetTitle,
+      widgetIcon: componentManifest.widgetIcon,
+    }))
+      .sort((widgetA: ComponentWidget, widgetB: ComponentWidget) => (
+        widgetA.widgetTitle.localeCompare(widgetB.widgetTitle)
+      ));
   }
 
   /* PRIVATE */
   private loadComponent(componentManifest: ComponentManifest) {
-    this.componentsById.set(componentManifest.id, componentManifest.component);
-    this.componentFormsById.set(componentManifest.id, componentManifest.editorForm);
-    this.componentWidgets.push({
-      id: componentManifest.id,
-      type: componentManifest.type,
-      widgetTitle: componentManifest.widgetTitle,
-      widgetIcon: componentManifest.widgetIcon,
-    });
+    this.componentsById.set(componentManifest.id, componentManifest);
   }
 
   private flushLoadedComponents() {
-    this.componentWidgets = [];
     this.componentsById = new Map();
-    this.componentFormsById = new Map();
   }
 }

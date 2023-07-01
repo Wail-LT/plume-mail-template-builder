@@ -1,8 +1,7 @@
-import { ComponentType } from '@lib/plume-mail-builder/types/component/ComponentType';
+export const DRAGGABLE_WIDGET_TYPE = 'widget';
 
 export type ComponentWidget = {
   id: string,
-  type: ComponentType,
   widgetTitle: string,
   widgetIcon: () => JSX.Element,
 };

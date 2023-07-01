@@ -1,7 +1,0 @@
-$editorPanelWidth: clamp(200px, 20%, 300px);
-
-.editor-panel {
-  width: $editorPanelWidth;
-  background-color: #f5f5f5;
-  transition: width $transition-duration ease-in-out;
-}
