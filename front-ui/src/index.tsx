@@ -1,3 +1,4 @@
+import installPlmMailBuilderModule from '@lib/plume-mail-builder/plm-mail-builder-module';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import 'micro-observables/batchingForReactDom';
@@ -20,6 +21,7 @@ installServicesModule(injector);
 installComponentsModule(injector);
 installApiModule(injector);
 installI18nModule(injector);
+installPlmMailBuilderModule(injector);
 
 injector.initializeSingletonInstances();
 
