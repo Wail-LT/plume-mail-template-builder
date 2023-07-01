@@ -8,7 +8,7 @@ type Props = {
 
 function EditorPanel({ className }: Props) {
   return (
-    <div className={classNames(scss.editor_test3, className)}>
+    <div className={classNames(scss.editorPanel, className)}>
       editor panel
     </div>
   );

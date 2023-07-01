@@ -10,6 +10,8 @@ module.exports = {
     'airbnb-typescript',
     'plugin:compat/recommended',
     'plugin:jsx-a11y/recommended',
+    'plugin:jsx-a11y/recommended',
+    'plugin:css-modules/recommended'
     // à décommenter pour voir l'usage des fonctions un peu exotiques
     // => par contre on ne peut pas laisser ce plugin tout le temps
     // => car il ne tient ni compte des polyfill, ni des navigateurs configurés dans browserslist
@@ -27,6 +29,7 @@ module.exports = {
   plugins: [
     'react',
     '@typescript-eslint',
+    "css-modules"
   ],
   settings: {
     react: {
@@ -73,5 +76,7 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': ['error', {
       'functions': false,
     }],
+    "css-modules/no-unused-class": [2, { "camelCase": 'dashes' }],
+    "css-modules/no-undef-class": [2, { "camelCase": 'dashes' }]
   },
 };
