@@ -4,10 +4,10 @@ import React from 'react';
 import { useDrag } from 'react-dnd';
 import scss from './widget.module.scss';
 
-export type WidgetProps = {
+type WidgetProps = {
   id: string;
   title: string;
-  icon: () => JSX.Element;
+  icon: (props: unknown) => JSX.Element;
   className?: string
 };
 
@@ -30,4 +30,5 @@ function Widget({
   );
 }
 
+export type { WidgetProps };
 export default Widget;

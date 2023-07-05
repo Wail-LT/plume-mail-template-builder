@@ -1,5 +1,5 @@
 import Widget from '@lib/plume-mail-builder/components/editor/editor-panel/widget/Widget';
-import MailComponentsService from '@lib/plume-mail-builder/services/mail-builder/MailComponentsService';
+import PMComponentsService from '@lib/plume-mail-builder/services/components/PMComponentsService';
 import { ComponentWidget } from '@lib/plume-mail-builder/types/component/ComponentWidget';
 import { getGlobalInstance } from 'plume-ts-di';
 import React, { useMemo } from 'react';
@@ -11,7 +11,7 @@ type Props = {
 };
 
 function EditorPanel({ className }: Props) {
-  const mailComponentsService = getGlobalInstance(MailComponentsService);
+  const mailComponentsService = getGlobalInstance(PMComponentsService);
   const widgets: ComponentWidget[] = useMemo(() => mailComponentsService.getWidgets(), []);
 
   return (

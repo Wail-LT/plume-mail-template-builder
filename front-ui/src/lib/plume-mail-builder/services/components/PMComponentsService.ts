@@ -5,7 +5,7 @@ import { componentManifests } from '@lib/plume-mail-builder/components/mail-comp
 /**
  * Service storing the state of the current mail template.
  */
-export default class MailComponentsService {
+export default class PMComponentsService {
   private readonly customComponents: ComponentManifest[] = [];
 
   private componentsById: Map<string, ComponentManifest> = new Map();
@@ -29,6 +29,10 @@ export default class MailComponentsService {
       .sort((widgetA: ComponentWidget, widgetB: ComponentWidget) => (
         widgetA.widgetTitle.localeCompare(widgetB.widgetTitle)
       ));
+  }
+
+  public findComponentById(componentId: string) {
+    return this.componentsById.get(componentId);
   }
 
   /* PRIVATE */
