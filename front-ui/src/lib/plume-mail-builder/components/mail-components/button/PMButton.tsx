@@ -1,7 +1,10 @@
 import { EditableStyle, pmButtonStyle } from '@lib/plume-mail-builder/components/mail-components/button/PMButton.style';
-import React from 'react';
 import { PMComponentProps } from '@lib/plume-mail-builder/types/component/ComponentManifest';
+import React, { ForwardedRef, forwardRef } from 'react';
 import { Button as RMButton } from '@react-email/components';
+
+type RMButtonContent = { label: string; href: string; };
+type PMButtonProps = PMComponentProps<RMButtonContent, EditableStyle>;
 
 const PM_BUTTON_DEFAULT_PROPS: PMButtonProps = {
   label: 'Click me',
@@ -9,16 +12,16 @@ const PM_BUTTON_DEFAULT_PROPS: PMButtonProps = {
   style: {},
 };
 
-type PMButtonContent = { label: string; href: string; };
-type PMButtonProps = PMComponentProps<PMButtonContent, EditableStyle>;
-
 const PMButton = ({
   label,
   href,
   style,
-}: PMButtonProps) => (
+}: PMButtonProps,
+ref: ForwardedRef<HTMLAnchorElement>,
+) => (
   <>
     <RMButton
+      ref={ref}
       href={href}
       target="_blank"
       style={{ ...pmButtonStyle, ...style }}
@@ -32,4 +35,4 @@ const PMButton = ({
 
 export { PM_BUTTON_DEFAULT_PROPS };
 export type { PMButtonProps };
-export default PMButton;
+export default forwardRef<HTMLAnchorElement, PMButtonProps>(PMButton);

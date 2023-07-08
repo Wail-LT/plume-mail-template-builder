@@ -1,15 +1,15 @@
-import { ComponentManifest } from '@lib/plume-mail-builder/types/component/ComponentManifest';
+import PMComponentWrapper
+  from '@lib/plume-mail-builder/components/mail-components/component-wrapper/PMComponentWrapper';
+import useDroppableContainer from '@lib/plume-mail-builder/hooks/drag-n-drop/DroppableContainer';
+import { ComponentType } from '@lib/plume-mail-builder/types/component/ComponentType';
 import React from 'react';
 import PMBuilderService from '@lib/plume-mail-builder/services/mail/builder/PMBuilderService';
-import PMComponentsService from '@lib/plume-mail-builder/services/components/PMComponentsService';
-import { DRAGGABLE_WIDGET_TYPE } from '@lib/plume-mail-builder/types/component/ComponentWidget';
 import {
   Body, Head, Html, Preview,
 } from '@react-email/components';
 import classNames from 'classnames';
 import { useObservable } from 'micro-observables';
 import { getGlobalInstance } from 'plume-ts-di';
-import { useDrop } from 'react-dnd';
 import scss from './editor-preview.module.scss';
 
 type Props = {
@@ -18,15 +18,9 @@ type Props = {
 
 function EditorPreview({ className }: Props) {
   const pmBuilderService = getGlobalInstance(PMBuilderService);
-  const pmComponentsService = getGlobalInstance(PMComponentsService);
-  const email = useObservable(pmBuilderService.getEmailBody());
 
-  const [, dropRef] = useDrop(() => ({
-    accept: DRAGGABLE_WIDGET_TYPE,
-    drop: (item: { id: string }) => {
-      pmBuilderService.addComponent(item.id);
-    },
-  }));
+  const email = useObservable(pmBuilderService.getEmailBody());
+  const dropRef = useDroppableContainer(Object.values(ComponentType));
 
   return (
     <div
@@ -39,16 +33,12 @@ function EditorPreview({ className }: Props) {
         <Preview>{/* TODO MAIL PREVIEW */}</Preview>
         <Body>
           {
-            email.map((serializedComponent) => {
-              const componentManifest: ComponentManifest | undefined = pmComponentsService
-                .findComponentById(serializedComponent.componentId);
-              if (!componentManifest) {
-                return null;
-              }
-              const ComponentRender = componentManifest.component;
-
-              return <ComponentRender key={serializedComponent.uuid} {...componentManifest.defaultProps} />;
-            })
+            email.map((serializedComponent) => (
+                <PMComponentWrapper
+                  key={serializedComponent.uuid}
+                  componentId={serializedComponent.componentId}
+                />
+            ))
           }
         </Body>
       </Html>

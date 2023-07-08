@@ -1,4 +1,6 @@
-import { ComponentManifest } from '@lib/plume-mail-builder/types/component/ComponentManifest';
+import {
+  UnknownComponentManifest,
+} from '@lib/plume-mail-builder/types/component/ComponentManifest';
 import { ComponentWidget } from '@lib/plume-mail-builder/types/component/ComponentWidget';
 import { componentManifests } from '@lib/plume-mail-builder/components/mail-components';
 
@@ -6,11 +8,13 @@ import { componentManifests } from '@lib/plume-mail-builder/components/mail-comp
  * Service storing the state of the current mail template.
  */
 export default class PMComponentsService {
-  private readonly customComponents: ComponentManifest[] = [];
+  private readonly customComponents: UnknownComponentManifest[] = [];
 
-  private componentsById: Map<string, ComponentManifest> = new Map();
+  private componentsById: Map<string, UnknownComponentManifest> = new Map();
 
-  public registerCustomComponents(componentsManifests: ComponentManifest[]) {
+  public registerCustomComponents(
+    componentsManifests: UnknownComponentManifest[],
+  ) {
     this.customComponents.push(...componentsManifests);
   }
 
@@ -25,6 +29,7 @@ export default class PMComponentsService {
       id: componentManifest.id,
       widgetTitle: componentManifest.widgetTitle,
       widgetIcon: componentManifest.widgetIcon,
+      widgetType: componentManifest.type,
     }))
       .sort((widgetA: ComponentWidget, widgetB: ComponentWidget) => (
         widgetA.widgetTitle.localeCompare(widgetB.widgetTitle)
@@ -36,7 +41,7 @@ export default class PMComponentsService {
   }
 
   /* PRIVATE */
-  private loadComponent(componentManifest: ComponentManifest) {
+  private loadComponent(componentManifest: UnknownComponentManifest) {
     this.componentsById.set(componentManifest.id, componentManifest);
   }
 

@@ -24,6 +24,7 @@ function EditorPanel({ className }: Props) {
             id={widget.id}
             title={widget.widgetTitle}
             icon={widget.widgetIcon}
+            type={widget.widgetType}
           />
         ))
       }

@@ -1,17 +1,24 @@
-import PMButton, { PM_BUTTON_DEFAULT_PROPS } from '@lib/plume-mail-builder/components/mail-components/button/PMButton';
+import PMButton, {
+  PM_BUTTON_DEFAULT_PROPS,
+  PMButtonProps,
+} from '@lib/plume-mail-builder/components/mail-components/button/PMButton';
 import PMButtonForm from '@lib/plume-mail-builder/components/mail-components/button/PMButton.form';
+import { EditableStyle } from '@lib/plume-mail-builder/components/mail-components/button/PMButton.style';
 import { ComponentManifest } from '@lib/plume-mail-builder/types/component/ComponentManifest';
+import { ComponentType } from '@lib/plume-mail-builder/types/component/ComponentType';
 import { LuRectangleHorizontal } from 'react-icons/lu';
 
-export default {
+const pmButtonManifest: ComponentManifest<PMButtonProps, EditableStyle, HTMLAnchorElement> = {
   id: 'plm_button',
-  type: 'content',
+  type: ComponentType.CONTENT,
   widgetTitle: 'Button',
-  widgetIcon: LuRectangleHorizontal,
+  widgetIcon: (LuRectangleHorizontal as unknown as ((props: unknown) => JSX.Element)),
   component: PMButton,
   defaultProps: PM_BUTTON_DEFAULT_PROPS,
   editorForm: PMButtonForm,
   // Css importer
   // styleLoader: () => import('./pm-button.module.scss?inline'),
   styleLoader: undefined,
-} as ComponentManifest;
+};
+
+export default pmButtonManifest;

@@ -1,10 +1,13 @@
 import PMBuilderService from '@lib/plume-mail-builder/services/mail/builder/PMBuilderService';
 import PMComponentsService from '@lib/plume-mail-builder/services/components/PMComponentsService';
 import PMRendererService from '@lib/plume-mail-builder/services/mail/renderer/PMRendererService';
-import { ComponentManifest } from '@lib/plume-mail-builder/types/component/ComponentManifest';
+import { UnknownComponentManifest } from '@lib/plume-mail-builder/types/component/ComponentManifest';
 import { Injector } from 'plume-ts-di';
 
-export default function installPlmMailBuilderModule(injector: Injector, componentsManifests: ComponentManifest[] = []) {
+export default function installPlmMailBuilderModule(
+  injector: Injector,
+  componentsManifests: UnknownComponentManifest[] = [],
+) {
   injector.registerSingleton(PMBuilderService);
   injector.registerSingleton(PMComponentsService);
   injector.registerSingleton(PMRendererService);

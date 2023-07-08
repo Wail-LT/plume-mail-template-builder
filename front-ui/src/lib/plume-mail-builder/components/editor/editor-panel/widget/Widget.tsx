@@ -1,24 +1,25 @@
-import { DRAGGABLE_WIDGET_TYPE } from '@lib/plume-mail-builder/types/component/ComponentWidget';
+import {
+  useDraggableWidget,
+} from '@lib/plume-mail-builder/hooks/drag-n-drop/DraggableComponent';
+import { ComponentType } from '@lib/plume-mail-builder/types/component/ComponentType';
 import classNames from 'classnames';
 import React from 'react';
-import { useDrag } from 'react-dnd';
 import scss from './widget.module.scss';
 
 type WidgetProps = {
   id: string;
   title: string;
   icon: (props: unknown) => JSX.Element;
+  type: ComponentType
   className?: string
 };
 
 function Widget({
-  id, title, icon, className,
+  id, title, icon, type, className,
 }: WidgetProps) {
   const WidgetIcon = icon;
-  const [, dragRef] = useDrag(() => ({
-    type: DRAGGABLE_WIDGET_TYPE,
-    item: { id },
-  }));
+  const dragRef = useDraggableWidget(id, type);
+
   return (
     <div
       ref={dragRef}

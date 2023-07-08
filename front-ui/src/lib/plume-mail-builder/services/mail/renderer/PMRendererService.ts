@@ -1,6 +1,6 @@
 import PMComponentsService from '@lib/plume-mail-builder/services/components/PMComponentsService';
 import PMBuilderService from '@lib/plume-mail-builder/services/mail/builder/PMBuilderService';
-import { ComponentManifest } from '@lib/plume-mail-builder/types/component/ComponentManifest';
+import { UnknownComponentManifest } from '@lib/plume-mail-builder/types/component/ComponentManifest';
 import { SerializedComponent } from '@lib/plume-mail-builder/types/mail-builder/SerializedComponent';
 import { render } from '@react-email/components';
 import { observable, WritableObservable } from 'micro-observables';
@@ -40,7 +40,7 @@ export default class PMRendererService {
   private async loadComponentsScss(componentsIds: Set<string>) {
     const componentsScss: string[] = [];
     const scssLoaders = [...componentsIds.values()].map((componentId: string) => {
-      const componentManifest: ComponentManifest | undefined = this.pmComponentsService
+      const componentManifest: UnknownComponentManifest | undefined = this.pmComponentsService
         .findComponentById(componentId);
 
       if (!componentManifest) {
