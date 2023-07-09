@@ -1,6 +1,9 @@
 type DndPayload = {
-  id: string,
+  componentId?: string,
+  entryUuid?: string,
   isWidget?: boolean,
 };
 
-export type { DndPayload };
+type DndCollectedProps = { isOver: boolean };
+
+export type { DndPayload, DndCollectedProps };

@@ -2,7 +2,7 @@ import {
   UnknownComponentManifest,
 } from '@lib/plume-mail-builder/types/component/ComponentManifest';
 import { ComponentWidget } from '@lib/plume-mail-builder/types/component/ComponentWidget';
-import { componentManifests } from '@lib/plume-mail-builder/components/mail-components';
+import { componentManifests } from '../../components/pm-components';
 
 /**
  * Service storing the state of the current mail template.

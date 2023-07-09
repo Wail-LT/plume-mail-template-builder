@@ -1,9 +1,9 @@
 import PMButton, {
   PM_BUTTON_DEFAULT_PROPS,
   PMButtonProps,
-} from '@lib/plume-mail-builder/components/mail-components/button/PMButton';
-import PMButtonForm from '@lib/plume-mail-builder/components/mail-components/button/PMButton.form';
-import { EditableStyle } from '@lib/plume-mail-builder/components/mail-components/button/PMButton.style';
+} from '@lib/plume-mail-builder/components/pm-components/button/PMButton';
+import PMButtonForm from '@lib/plume-mail-builder/components/pm-components/button/PMButton.form';
+import { EditableStyle } from '@lib/plume-mail-builder/components/pm-components/button/PMButton.style';
 import { ComponentManifest } from '@lib/plume-mail-builder/types/component/ComponentManifest';
 import { ComponentType } from '@lib/plume-mail-builder/types/component/ComponentType';
 import { LuRectangleHorizontal } from 'react-icons/lu';

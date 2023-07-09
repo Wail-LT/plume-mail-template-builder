@@ -1,11 +1,12 @@
 import PMComponentWrapper
-  from '@lib/plume-mail-builder/components/mail-components/component-wrapper/PMComponentWrapper';
+  from '@lib/plume-mail-builder/components/component-wrapper/PMComponentWrapper';
 import useDroppableContainer from '@lib/plume-mail-builder/hooks/drag-n-drop/DroppableContainer';
 import { ComponentType } from '@lib/plume-mail-builder/types/component/ComponentType';
+import { ROOT_ENTRY_UUID } from '@lib/plume-mail-builder/types/mail-builder/PMEntry';
 import React from 'react';
 import PMBuilderService from '@lib/plume-mail-builder/services/mail/builder/PMBuilderService';
 import {
-  Body, Head, Html, Preview,
+  Body, Container, Head, Html, Preview,
 } from '@react-email/components';
 import classNames from 'classnames';
 import { useObservable } from 'micro-observables';
@@ -20,11 +21,11 @@ function EditorPreview({ className }: Props) {
   const pmBuilderService = getGlobalInstance(PMBuilderService);
 
   const email = useObservable(pmBuilderService.getEmailBody());
-  const dropRef = useDroppableContainer(Object.values(ComponentType));
+  const [dropConnector] = useDroppableContainer(ROOT_ENTRY_UUID, ComponentType.ROOT);
 
   return (
     <div
-      ref={dropRef}
+      ref={dropConnector}
       title={'editor-preview'}
       className={classNames(scss.editorPreview, className)}
     >
@@ -32,14 +33,16 @@ function EditorPreview({ className }: Props) {
         <Head>{/* TODO MAIL HEAD */}</Head>
         <Preview>{/* TODO MAIL PREVIEW */}</Preview>
         <Body>
-          {
-            email.map((serializedComponent) => (
+          <Container>
+            {
+              email.map((entry) => (
                 <PMComponentWrapper
-                  key={serializedComponent.uuid}
-                  componentId={serializedComponent.componentId}
+                  key={entry.uuid}
+                  entryUuid={entry.uuid}
                 />
-            ))
-          }
+              ))
+            }
+          </Container>
         </Body>
       </Html>
     </div>

@@ -1,7 +1,7 @@
 import PMComponentsService from '@lib/plume-mail-builder/services/components/PMComponentsService';
 import PMBuilderService from '@lib/plume-mail-builder/services/mail/builder/PMBuilderService';
 import { UnknownComponentManifest } from '@lib/plume-mail-builder/types/component/ComponentManifest';
-import { SerializedComponent } from '@lib/plume-mail-builder/types/mail-builder/SerializedComponent';
+import { PMEntry } from '@lib/plume-mail-builder/types/mail-builder/PMEntry';
 import { render } from '@react-email/components';
 import { observable, WritableObservable } from 'micro-observables';
 import { Logger } from 'simple-logging-system';
@@ -12,13 +12,13 @@ const logger: Logger = new Logger('MailBuilderService');
  * Service storing the state of the current mail template.
  */
 export default class PMRendererService {
-  private readonly emailBody: WritableObservable<SerializedComponent[]>;
+  private readonly emailBody: WritableObservable<PMEntry[]>;
 
   constructor(
     private readonly pmBuilderService: PMBuilderService,
     private readonly pmComponentsService: PMComponentsService,
   ) {
-    this.emailBody = observable<SerializedComponent[]>([]);
+    this.emailBody = observable<PMEntry[]>([]);
   }
 
   async renderEmail(email: JSX.Element) {

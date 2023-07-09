@@ -1,67 +1,110 @@
 import PMComponentsService from '@lib/plume-mail-builder/services/components/PMComponentsService';
+import PMDragNDropService from '@lib/plume-mail-builder/services/drag-n-drop/DragNDropService';
 import { ComponentType } from '@lib/plume-mail-builder/types/component/ComponentType';
 import {
-  SerializedComponent,
-  SerializedSectionComponent,
-} from '@lib/plume-mail-builder/types/mail-builder/SerializedComponent';
-import { observable, WritableObservable } from 'micro-observables';
+  PMEntry,
+  PMEntryWithChildren, ROOT_ENTRY, ROOT_ENTRY_UUID,
+} from '@lib/plume-mail-builder/types/mail-builder/PMEntry';
+import { Observable, observable, WritableObservable } from 'micro-observables';
 import { Logger } from 'simple-logging-system';
 import { v4 as uuid } from 'uuid';
 
 const logger: Logger = new Logger('MailBuilderService');
 
+const EMPTY_SERIALIZED_COMPONENTS_BY_ID = new Map<string, PMEntry>()
+  .set(ROOT_ENTRY_UUID, ROOT_ENTRY);
+
 /**
  * Service storing the state of the current mail template.
  */
 export default class PMBuilderService {
-  private readonly emailBody: WritableObservable<SerializedComponent[]>;
+  private readonly mailEntriesByUuid: WritableObservable<Map<string, PMEntry>>;
 
   constructor(private readonly mailComponentsService: PMComponentsService) {
-    this.emailBody = observable<SerializedComponent[]>([]);
+    this.mailEntriesByUuid = observable<Map<string, PMEntry>>(
+      new Map(EMPTY_SERIALIZED_COMPONENTS_BY_ID),
+    );
   }
 
   initEmail() {
-    this.emailBody.set([]);
+    this.mailEntriesByUuid.set(new Map(EMPTY_SERIALIZED_COMPONENTS_BY_ID));
   }
 
-  addComponent(componentId: string) {
+  addEntry(componentId: string, targetEntryUuid: string = ROOT_ENTRY_UUID) {
     const component = this.mailComponentsService.findComponentById(componentId);
+    const targetEntry = this.getEntryByUuid(targetEntryUuid);
     if (!component) {
       logger.error(`Component with id ${componentId} not found`);
       // FIXME : handle the error properly
       return;
     }
-    this.emailBody.set([...this.emailBody.get(), {
-      uuid: uuid(),
-      type: component.type,
-      componentId: component.id,
-      children: component.type === ComponentType.SECTION ? [] : undefined,
-    }]);
+
+    if (!targetEntry) {
+      logger.error(`Target component with id ${targetEntryUuid} not found in the mail entries`);
+      // FIXME : handle the error properly
+      return;
+    }
+
+    if (!PMDragNDropService.isDroppableComponent(targetEntry.type)) {
+      logger.error(`Target component with id ${targetEntryUuid} is not droppable`);
+      // FIXME : handle the error properly
+      return;
+    }
+
+    this.mailEntriesByUuid.update((entriesByUuid) => {
+      const newEntryUuid = uuid();
+      // 1. Add the new component to the serialized components
+      entriesByUuid.set(newEntryUuid, {
+        uuid: newEntryUuid,
+        type: component.type,
+        componentId: component.id,
+        childrenEntriesUuids: component.type === ComponentType.SECTION ? [] : undefined,
+      });
+
+      // 2. Add the new component to the children of the target component
+      (targetEntry as PMEntryWithChildren)
+        .childrenEntriesUuids
+        .push(newEntryUuid);
+
+      return new Map(entriesByUuid);
+    });
   }
 
   loadEmail() {
-    this.emailBody.set([]);
     throw new Error('Not implemented');
   }
 
-  getEmailBody() {
-    return this.emailBody.readOnly();
+  getEmailBody(): Observable<PMEntry[]> {
+    return this.mailEntriesByUuid.select((entriesByUuid: Map<string, PMEntry>) => (
+      (entriesByUuid.get(ROOT_ENTRY_UUID) as PMEntryWithChildren)
+        .childrenEntriesUuids
+        .reduce((acc, childComponentId: string) => {
+          const serializedComponent = entriesByUuid.get(childComponentId);
+          if (serializedComponent) {
+            acc.push(serializedComponent);
+          }
+          return acc;
+        }, [] as PMEntry[])
+    ));
   }
 
-  getUsedComponents(serializedComponents?: SerializedComponent[]) {
+  getUsedComponents() {
     const componentsIds = new Set<string>();
-    const emailComponents = serializedComponents || this.emailBody.get();
 
-    emailComponents.forEach((component: SerializedComponent) => {
-      if ([ComponentType.SECTION, ComponentType.COLUMN].includes(component.type)) {
-        this.getUsedComponents((component as SerializedSectionComponent).children)
-          .forEach((childComponentId: string) => {
-            componentsIds.add(childComponentId);
-          });
-      }
-      componentsIds.add(component.componentId);
-    });
+    for (const entry of this.mailEntriesByUuid.get().values()) {
+      componentsIds.add(entry.componentId);
+    }
 
     return componentsIds;
+  }
+
+  getEntryByUuid(entryUuid: string) {
+    const entry = this.mailEntriesByUuid.get().get(entryUuid);
+
+    if (!entry) {
+      logger.error(`Component with uuid ${entryUuid} not found in the mail entries`);
+    }
+
+    return entry;
   }
 }

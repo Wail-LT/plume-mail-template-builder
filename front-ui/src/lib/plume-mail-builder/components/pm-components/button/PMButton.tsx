@@ -1,4 +1,4 @@
-import { EditableStyle, pmButtonStyle } from '@lib/plume-mail-builder/components/mail-components/button/PMButton.style';
+import { EditableStyle, pmButtonStyle } from '@lib/plume-mail-builder/components/pm-components/button/PMButton.style';
 import { PMComponentProps } from '@lib/plume-mail-builder/types/component/ComponentManifest';
 import React, { ForwardedRef, forwardRef } from 'react';
 import { Button as RMButton } from '@react-email/components';
