@@ -2,14 +2,21 @@ import { ComponentType } from '@lib/plume-mail-builder/types/component/Component
 
 type PMEntry = PMSimpleEntry | PMEntryWithChildren;
 
-type PMEntryWithChildren = PMSimpleEntry & {
+type PMEntryWithChildren = PMBaseEntry & {
+  type: typeof ComponentType.ROOT | typeof ComponentType.SECTION | typeof ComponentType.COLUMN,
   childrenEntriesUuids: string[],
 };
 
-type PMSimpleEntry = {
+type PMSimpleEntry = PMBaseEntry & {
+  type: typeof ComponentType.CONTENT,
+  childrenEntriesUuids: undefined,
+};
+
+type PMBaseEntry = {
   uuid: string,
-  type: ComponentType,
   componentId: string,
+  parentEntryUuid: string | undefined,
+  index?: number,
 };
 
 const ROOT_ENTRY_UUID = 'root';
@@ -18,6 +25,7 @@ const ROOT_ENTRY: PMEntryWithChildren = {
   type: ComponentType.ROOT,
   componentId: 'pm_root',
   childrenEntriesUuids: [],
+  parentEntryUuid: undefined,
 };
 
 export type { PMEntry, PMSimpleEntry, PMEntryWithChildren };

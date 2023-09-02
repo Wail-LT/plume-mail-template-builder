@@ -19,19 +19,25 @@ function PMComponentWrapper({ entryUuid }: PmComponentWrapperProps) {
   const pmComponentsService = getGlobalInstance(PMComponentsService);
   const pmBuilderService = getGlobalInstance(PMBuilderService);
 
-  const componentRef = useRef<HTMLElement>(null);
-
   const entry: PMEntry | undefined = pmBuilderService.getEntryByUuid(entryUuid);
-  const componentManifest: UnknownComponentManifest | undefined = entry
-    ? pmComponentsService.findComponentById(entry.componentId)
-    : undefined;
-  const dragConnector = useDraggableEntry(entryUuid, componentManifest?.type);
-  const [dropConnector] = useDroppableContainer(entryUuid, componentManifest?.type);
+  if (!entry) {
+    logger.warn(`Entry with uuid ${entryUuid} not found`);
+    return <></>;
+  }
+  const componentManifest: UnknownComponentManifest | undefined = pmComponentsService.findComponentById(
+    entry.componentId,
+  );
+
+  const componentRef = useRef<HTMLElement>(null);
+  const componentIndexRef = useRef<number | undefined>(entry.index);
 
   if (!componentManifest) {
     logger.warn(`Component with id ${entryUuid} not found`);
     return <></>;
   }
+
+  const dragConnector = useDraggableEntry(entryUuid, componentManifest.type, componentIndexRef);
+  const [dropConnector] = useDroppableContainer(entryUuid, componentManifest.type, componentIndexRef);
 
   const PMComponent = componentManifest.component;
   const componentProps = componentManifest.defaultProps;

@@ -1,9 +1,10 @@
 import PMComponentsService from '@lib/plume-mail-builder/services/components/PMComponentsService';
-import PMDragNDropService from '@lib/plume-mail-builder/services/drag-n-drop/DragNDropService';
 import { ComponentType } from '@lib/plume-mail-builder/types/component/ComponentType';
 import {
   PMEntry,
-  PMEntryWithChildren, ROOT_ENTRY, ROOT_ENTRY_UUID,
+  PMEntryWithChildren,
+  ROOT_ENTRY,
+  ROOT_ENTRY_UUID,
 } from '@lib/plume-mail-builder/types/mail-builder/PMEntry';
 import { Observable, observable, WritableObservable } from 'micro-observables';
 import { Logger } from 'simple-logging-system';
@@ -32,7 +33,7 @@ export default class PMBuilderService {
 
   addEntry(componentId: string, targetEntryUuid: string = ROOT_ENTRY_UUID) {
     const component = this.mailComponentsService.findComponentById(componentId);
-    const targetEntry = this.getEntryByUuid(targetEntryUuid);
+    const targetEntry: PMEntry | undefined = this.getEntryByUuid(targetEntryUuid);
     if (!component) {
       logger.error(`Component with id ${componentId} not found`);
       // FIXME : handle the error properly
@@ -45,26 +46,29 @@ export default class PMBuilderService {
       return;
     }
 
-    if (!PMDragNDropService.isDroppableComponent(targetEntry.type)) {
-      logger.error(`Target component with id ${targetEntryUuid} is not droppable`);
+    if (targetEntry.type === ComponentType.CONTENT) {
+      logger.error(`Target component with id ${targetEntryUuid} is not a container`);
       // FIXME : handle the error properly
       return;
     }
 
     this.mailEntriesByUuid.update((entriesByUuid) => {
-      const newEntryUuid = uuid();
-      // 1. Add the new component to the serialized components
-      entriesByUuid.set(newEntryUuid, {
-        uuid: newEntryUuid,
+      const newEntry: PMEntry = {
+        uuid: uuid(),
         type: component.type,
         componentId: component.id,
-        childrenEntriesUuids: component.type === ComponentType.SECTION ? [] : undefined,
-      });
+        childrenEntriesUuids: component.type !== ComponentType.CONTENT ? [] : undefined,
+        parentEntryUuid: targetEntryUuid,
+        index: targetEntry.childrenEntriesUuids.length,
+      } as PMEntry;
+
+      // 1. Add the new component to the serialized components
+      entriesByUuid.set(newEntry.uuid, newEntry);
 
       // 2. Add the new component to the children of the target component
       (targetEntry as PMEntryWithChildren)
         .childrenEntriesUuids
-        .push(newEntryUuid);
+        .push(newEntry.uuid);
 
       return new Map(entriesByUuid);
     });

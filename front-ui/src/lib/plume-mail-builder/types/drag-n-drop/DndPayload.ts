@@ -1,9 +1,17 @@
-type DndPayload = {
-  componentId?: string,
-  entryUuid?: string,
-  isWidget?: boolean,
+type DndPayload = DndWidgetPayload | DndEntryPayload;
+
+type DndWidgetPayload = {
+  componentId: string,
+  entryUuid: undefined,
 };
 
-type DndCollectedProps = { isOver: boolean };
+type DndEntryPayload = {
+  entryUuid: string,
+  componentId: undefined,
+  index: React.MutableRefObject<number | undefined>,
+};
 
-export type { DndPayload, DndCollectedProps };
+type DraggableCollectedProps = { isDragging: boolean };
+type DroppableCollectedProps = { isOver: boolean };
+
+export type { DndPayload, DroppableCollectedProps, DraggableCollectedProps };
